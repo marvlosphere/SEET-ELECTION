@@ -15,7 +15,7 @@ Supabase is a free online database. It stores your voters, tokens, and votes.
 4. Wait for it to set up (~1 minute)
 5. Go to **SQL Editor** (left sidebar)
 6. Open the file `database.sql` from this project
-7. Paste it into the SQL editor and click **Run**
+7. Paste it into the SQL editor and  click **Run**
 8. ✅ Your database is ready
 
 **Get your API keys:**
