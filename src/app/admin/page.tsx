@@ -176,7 +176,7 @@ export default function AdminPage() {
                 </p>
                 <p className="text-gray-500 text-sm mt-1">Voter Turnout</p>
               </div>
-              </div>
+            </div>
             </div>
             <div className="card">
               <h3 className="font-bold text-dark mb-2">Quick Actions</h3>
