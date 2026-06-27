@@ -1,4 +1,7 @@
-export async function GET(req: NextRequest) {
+import { NextRequest, NextResponse } from 'next/server'
+import { getDb } from '@/lib/db'
+import { isAdminAuthed } from '@/lib/adminAuth'
+  export async function GET(req: NextRequest) {
   if (!isAdminAuthed(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   
   // Disable caching
