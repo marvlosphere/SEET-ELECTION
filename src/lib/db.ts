@@ -1,11 +1,12 @@
-// Server-only database client
-// Only import this in src/app/api/ routes, never in page components
-
 import { createClient } from '@supabase/supabase-js'
 
 export function getDb() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      db: { schema: 'public' },
+      global: { headers: { 'Cache-Control': 'no-cache' } },
+    }
   )
 }
