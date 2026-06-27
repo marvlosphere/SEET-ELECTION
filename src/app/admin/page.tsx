@@ -43,8 +43,9 @@ export default function AdminPage() {
   const [sendingTokens, setSendingTokens] = useState(false)
 
   const fetchData = useCallback(async () => {
-    try {
-      const [statsRes, resultsRes, votersRes, settingsRes] = await Promise.all([
+  try {
+    if (!adminKey) return
+    const [statsRes, resultsRes, votersRes, settingsRes] = await Promise.all([
         fetch('/api/admin/stats', { headers: { 'x-admin-key': adminKey } }),
         fetch('/api/admin/results', { headers: { 'x-admin-key': adminKey } }),
         fetch('/api/admin/voters', { headers: { 'x-admin-key': adminKey } }),
