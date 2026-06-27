@@ -86,8 +86,7 @@ export const PLACEHOLDER_CANDIDATES: CandidateSeed[] = [
     position: 'Financial Secretary',
     department: 'Civil Engineering',
     level: '400',
-    manifesto: 'I will ensure our association's finances are transparent, auditable, and used for the benefit of all students.',
-  },
+    manifesto: "I will ensure our association's finances are transparent, auditable, and used for the benefit of all students.",  },
 
   // PRO
   {
@@ -95,7 +94,7 @@ export const PLACEHOLDER_CANDIDATES: CandidateSeed[] = [
     position: 'PRO',
     department: 'Chemical Engineering',
     level: '300',
-    manifesto: 'I will build SEET's presence online and offline — keeping students informed, engaged, and proud of their school.',
+    manifesto: "I will build SEET's presence online and offline — keeping students informed, engaged, and proud of their school.",
   },
   {
     name: 'Obi Kelechi',
