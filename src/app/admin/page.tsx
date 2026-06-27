@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { POSITIONS, Position } from '@/lib/supabase'
 
 interface Stats {
@@ -31,6 +31,7 @@ interface Voter {
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false)
   const [adminKey, setAdminKey] = useState('')
+  const adminKeyRef = useRef('')
   const [authError, setAuthError] = useState('')
   const [tab, setTab] = useState<'dashboard' | 'voters' | 'results' | 'settings'>('dashboard')
   const [stats, setStats] = useState<Stats | null>(null)
@@ -43,7 +44,7 @@ export default function AdminPage() {
   const [sendingTokens, setSendingTokens] = useState(false)
 
   const fetchData = useCallback(async (key?: string) => {
-  const authKey = key || adminKey
+  const authKey = key || adminKeyRef.current || adminKey
   if (!authKey) return
   try {
     const [statsRes, resultsRes, votersRes, settingsRes] = await Promise.all([
@@ -78,6 +79,7 @@ export default function AdminPage() {
   setLoading(false)
   if (res.ok) {
     setAuthed(true)
+    adminKeyRef.current = adminKey
     setAuthError('')
     fetchData(adminKey)
   }
@@ -140,7 +142,7 @@ export default function AdminPage() {
               type="password"
               placeholder="Admin key"
               value={adminKey}
-              onChange={e => setAdminKey(e.target.value)}
+              onChange={e => { setAdminKey(e.target.value); adminKeyRef.current = e.target.value }}
               required
             />
             {authError && <p className="text-red-600 text-sm">{authError}</p>}
