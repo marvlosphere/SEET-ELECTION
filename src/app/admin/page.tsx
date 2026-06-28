@@ -246,36 +246,95 @@ export default function AdminPage() {
           <div>
             <h2 className="text-xl font-bold text-dark mb-6">Live Results</h2>
             <div className="space-y-4">
-              {resultsByPosition.map(({ position, candidates }) => (
-                <div key={position} className="card">
-                  <h3 className="font-bold text-dark mb-4">{position}</h3>
-                  {candidates.length === 0 ? (
-                    <p className="text-gray-400 text-sm">No votes yet</p>
-                  ) : (
-                    <div className="space-y-3">
-                      {candidates.map((c, i) => {
-                        const total = candidates.reduce((sum, x) => sum + x.vote_count, 0)
-                        const pct = total > 0 ? Math.round((c.vote_count / total) * 100) : 0
-                        return (
-                          <div key={c.candidate_id}>
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="font-medium text-dark">
-                                {i === 0 && <span className="text-accent mr-1">👑</span>}
-                                {c.candidate_name}
-                              </span>
-                              <span className="text-sm text-gray-500">{c.vote_count} votes ({pct}%)</span>
+              {POSITIONS.map(position => {
+                const positionCandidates = results.filter(r => r.position === position)
+                const forVotes = positionCandidates.filter(r => !r.candidate_name.startsWith('AGAINST:'))
+                const againstEntries = positionCandidates.filter(r => r.candidate_name.startsWith('AGAINST:'))
+        
+                // Check if unopposed (has against votes entry)
+                const isUnopposed = againstEntries.length > 0 || 
+                  (positionCandidates.length <= 2 && positionCandidates.some(r => results.find(x => x.candidate_name === r.candidate_name && x !== r)))
+        
+                // Get unique candidate names for this position
+                const uniqueCandidates = forVotes.reduce((acc, r) => {
+                  const existing = acc.find(x => x.candidate_name === r.candidate_name)
+                  if (!existing) acc.push(r)
+                  return acc
+                }, [] as typeof forVotes)
+        
+                return (
+                  <div key={position} className="card">
+                    <h3 className="font-bold text-dark mb-4">{position}</h3>
+                    {positionCandidates.length === 0 ? (
+                      <p className="text-gray-400 text-sm">No votes yet</p>
+                    ) : (
+                      <div className="space-y-4">
+                        {uniqueCandidates.map(candidate => {
+                          const forCount = positionCandidates.find(r => 
+                            r.candidate_name === candidate.candidate_name && 
+                            r.candidate_id === candidate.candidate_id
+                          )?.vote_count ?? 0
+        
+                          const againstCandidate = positionCandidates.find(r => 
+                            r.candidate_name === candidate.candidate_name && 
+                            r.candidate_id !== candidate.candidate_id
+                          )
+                          const againstCount = againstCandidate?.vote_count ?? 0
+                          const hasAgainst = againstCount > 0 || againstEntries.length > 0
+        
+                          const net = forCount - againstCount
+                          const total = forVotes.reduce((sum, x) => sum + x.vote_count, 0) + 
+                            againstEntries.reduce((sum, x) => sum + x.vote_count, 0)
+                          const pct = total > 0 ? Math.round((forCount / total) * 100) : 0
+        
+                          return (
+                            <div key={candidate.candidate_id} className="border border-gray-100 rounded-xl p-4">
+                              <div className="flex items-center justify-between mb-3">
+                                <p className="font-semibold text-dark">{candidate.candidate_name}</p>
+                                {hasAgainst && (
+                                  <span className={`badge ${net > 0 ? 'bg-green-100 text-green-700' : net < 0 ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'}`}>
+                                    Net: {net > 0 ? '+' : ''}{net}
+                                  </span>
+                                )}
+                              </div>
+                              {hasAgainst ? (
+                                <div className="space-y-2">
+                                  <div className="flex items-center justify-between text-sm">
+                                    <span className="text-green-600 font-medium">For</span>
+                                    <span className="text-gray-500">{forCount} votes</span>
+                                  </div>
+                                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div className="h-full bg-green-500 rounded-full transition-all"
+                                      style={{ width: `${total > 0 ? Math.round((forCount / total) * 100) : 0}%` }} />
+                                  </div>
+                                  <div className="flex items-center justify-between text-sm mt-2">
+                                    <span className="text-red-500 font-medium">Against</span>
+                                    <span className="text-gray-500">{againstCount} votes</span>
+                                  </div>
+                                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div className="h-full bg-red-400 rounded-full transition-all"
+                                      style={{ width: `${total > 0 ? Math.round((againstCount / total) * 100) : 0}%` }} />
+                                  </div>
+                                </div>
+                              ) : (
+                                <div>
+                                  <div className="flex items-center justify-between mb-1">
+                                    <span className="text-sm text-gray-500">{forCount} votes ({pct}%)</span>
+                                  </div>
+                                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div className="h-full bg-primary rounded-full transition-all"
+                                      style={{ width: `${pct}%` }} />
+                                  </div>
+                                </div>
+                              )}
                             </div>
-                            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                              <div className={`h-full rounded-full transition-all ${i === 0 ? 'bg-primary' : 'bg-gray-300'}`}
-                                style={{ width: `${pct}%` }} />
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )}
-                </div>
-              ))}
+                          )
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
             </div>
           </div>
         )}
