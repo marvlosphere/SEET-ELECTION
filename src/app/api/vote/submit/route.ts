@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     const voteRows = votes.map((v: { position: string; candidate_id: string }) => ({ voter_id, candidate_id: v.candidate_id, position: v.position }))
     const { error: voteError } = await db.from('votes').insert(voteRows)
     if (voteError) throw voteError
-    await db.from('voters').update({ has_voted: true }).eq('id', voter_id)
+    await db.from('voters').update({ has_voted: true, token_used: true }).eq('id', voter_id)
     await db.from('voter_sessions').delete().eq('voter_id', voter_id)
     return NextResponse.json({ success: true })
   } catch (err) {
