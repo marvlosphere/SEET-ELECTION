@@ -7,11 +7,11 @@ export default function HomePage() {
       <header className="px-6 py-5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center font-display font-bold text-dark text-sm">
-            SE
+            NIMECHE FUTA CHAPTER
           </div>
           <span className="text-white font-semibold text-sm leading-tight">
-            School of Engineering<br />
-            <span className="text-accent">& Engineering Technology</span>
+            Mechanical<br />
+            <span className="text-accent">Engineering</span>
           </span>
         </div>
         <Link href="/admin" className="text-white/60 hover:text-white text-sm transition-colors">
@@ -23,7 +23,7 @@ export default function HomePage() {
       <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
         <div className="mb-6">
           <span className="badge bg-accent/20 text-accent border border-accent/30 text-sm px-4 py-1.5">
-            🗳️ Student Union Elections
+            🗳️ NIMECHE 2026 Elections
           </span>
         </div>
 
@@ -33,7 +33,7 @@ export default function HomePage() {
         </h1>
 
         <p className="text-white/70 text-lg max-w-md mb-10">
-          Cast your vote for the SEET Student Union executives. 
+          Cast your vote for the NIMECH executives. 
           You need your <strong className="text-white">matric number</strong> and your 
           <strong className="text-white"> voting token</strong> to proceed.
         </p>
@@ -55,9 +55,9 @@ export default function HomePage() {
         <p className="text-center text-white/40 text-xs uppercase tracking-widest mb-4">Positions on the ballot</p>
         <div className="flex flex-wrap justify-center gap-2 max-w-2xl mx-auto">
           {[
-            'President', 'Vice President', 'Secretary General',
-            'Asst. Secretary General', 'Financial Secretary',
-            'PRO', 'Director of Sports', 'Director of Social'
+            'President', 'Vice President', 'General Secretary',
+            'Asst. General Secretary', 'Financial Secretary',
+            'PRO I', 'PRO II', 'Sports Director', 'Social Director'
           ].map(pos => (
             <span key={pos} className="badge bg-white/10 text-white/70 border border-white/10 px-3 py-1 text-xs">
               {pos}
