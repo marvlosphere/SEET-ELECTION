@@ -176,30 +176,42 @@ export default function VotePage() {
                   <div className="grid gap-3">
                     {candidatesForPosition(position).map(candidate => {
                       const selected = selections[position] === candidate.id
+                      const isAgainst = candidate.manifesto === 'AGAINST'
                       return (
                         <button
                           key={candidate.id}
                           onClick={() => selectCandidate(position, candidate.id)}
                           className={`text-left border-2 rounded-xl p-4 transition-all ${
                             selected
-                              ? 'border-primary bg-primary/5'
+                              ? isAgainst ? 'border-danger bg-red-50' : 'border-primary bg-primary/5'
                               : 'border-gray-200 hover:border-gray-300 bg-white'
                           }`}
                         >
                           <div className="flex items-start gap-3">
                             <div className={`mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
-                              selected ? 'border-primary bg-primary' : 'border-gray-300'
+                              selected
+                                ? isAgainst ? 'border-danger bg-danger' : 'border-primary bg-primary'
+                                : 'border-gray-300'
                             }`}>
                               {selected && <div className="w-2 h-2 rounded-full bg-white" />}
                             </div>
                             <div className="flex-1">
-                              <p className="font-semibold text-dark">{candidate.name}</p>
-                              <p className="text-gray-500 text-xs mt-0.5">
-                                {candidate.department} · {candidate.level} Level
-                              </p>
-                              <p className="text-gray-600 text-sm mt-2 leading-relaxed">
-                                {candidate.manifesto}
-                              </p>
+                              {isAgainst ? (
+                                <>
+                                  <p className="font-semibold text-danger">Vote Against {candidate.name}</p>
+                                  <p className="text-gray-500 text-xs mt-0.5">Cast your vote against this candidate</p>
+                                </>
+                              ) : (
+                                <>
+                                  <p className="font-semibold text-dark">{candidate.name}</p>
+                                  <p className="text-gray-500 text-xs mt-0.5">
+                                    {candidate.department} · {candidate.level} Level
+                                  </p>
+                                  <p className="text-gray-600 text-sm mt-2 leading-relaxed">
+                                    {candidate.manifesto}
+                                  </p>
+                                </>
+                              )}
                             </div>
                           </div>
                         </button>
