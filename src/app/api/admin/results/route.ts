@@ -1,17 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getDb } from '@/lib/db'
+import { createClient } from '@supabase/supabase-js'
 import { isAdminAuthed } from '@/lib/adminAuth'
+
 export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 export async function GET(req: NextRequest) {
   if (!isAdminAuthed(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  const db = getDb()
+
+  const db = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
 
   const { data: votes } = await db
     .from('votes')
     .select('candidate_id, position')
 
-  if (!votes || votes.length === 0) return NextResponse.json([])
+  if (!votes || votes.length === 0) return NextResponse.json([], {
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    }
+  })
 
   const candidateIds = Array.from(new Set(votes.map(v => v.candidate_id)))
   const { data: candidates } = await db
@@ -35,5 +47,11 @@ export async function GET(req: NextRequest) {
     counts[key].vote_count++
   }
 
-  return NextResponse.json(Object.values(counts))
+  return NextResponse.json(Object.values(counts), {
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    }
+  })
 }
