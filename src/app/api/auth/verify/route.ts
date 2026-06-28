@@ -12,7 +12,6 @@ export async function POST(req: NextRequest) {
     if (voter.has_voted) return NextResponse.json({ error: 'This matric number has already been used to vote.' }, { status: 403 })
     if (voter.token_used) return NextResponse.json({ error: 'This token has already been used.' }, { status: 403 })
     if (voter.token !== token.toUpperCase().replace(/\s/g, '')) return NextResponse.json({ error: 'Invalid token. Check your SMS/WhatsApp message.' }, { status: 401 })
-    await db.from('voters').update({ token_used: true }).eq('id', voter.id)
     const sessionToken = uuidv4()
     await db.from('voter_sessions').insert({ voter_id: voter.id, session_token: sessionToken, expires_at: new Date(Date.now() + 30 * 60 * 1000).toISOString() })
     const { data: candidates } = await db.from('candidates').select('*').order('position').order('name')
