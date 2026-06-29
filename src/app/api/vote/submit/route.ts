@@ -23,6 +23,19 @@ export async function POST(req: NextRequest) {
     if (voteError) throw voteError
     await db.from('voters').update({ has_voted: true, token_used: true }).eq('id', voter_id)
     await db.from('voter_sessions').delete().eq('voter_id', voter_id)
+    // Log vote submission
+    const db2 = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+    await db2.from('audit_log').insert({
+      event_type: 'VOTE_SUBMITTED',
+      voter_id: voter_id,
+      ip_address: req.headers.get('x-forwarded-for') ?? 'unknown',
+      details: `Voted for ${votes.length} positions`,
+      success: true,
+    })
+    
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error(err)
