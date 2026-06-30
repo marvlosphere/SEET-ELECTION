@@ -112,7 +112,61 @@ export default function AdminPage() {
     if (res.ok) setUploadStatus(`✅ Tokens sent to ${data.sent} voters via SMS`)
     else setUploadStatus(`❌ ${data.error}`)
   }
-
+  async function handlePhotoUpload(file: File) {
+    setCandUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!)
+  
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        { method: 'POST', body: formData }
+      )
+      const data = await res.json()
+      if (data.secure_url) {
+        setCandForm(prev => ({ ...prev, photo_url: data.secure_url }))
+      } else {
+        setCandStatus('❌ Photo upload failed')
+      }
+    } catch {
+      setCandStatus('❌ Photo upload failed')
+    }
+    setCandUploading(false)
+  }
+  
+  async function handleAddCandidate() {
+    if (!candForm.name.trim() || !candForm.position.trim()) {
+      setCandStatus('❌ Name and position are required')
+      return
+    }
+    setCandSubmitting(true)
+    setCandStatus('')
+    const res = await fetch('/api/admin/candidates/manage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': keyRef.current },
+      body: JSON.stringify(candForm),
+    })
+    const data = await res.json()
+    setCandSubmitting(false)
+    if (res.ok) {
+      setCandStatus(`✅ ${candForm.name} added to ${candForm.position}`)
+      setCandForm({ name: '', position: '', department: '', level: '', manifesto: '', photo_url: '' })
+      fetchData()
+    } else {
+      setCandStatus(`❌ ${data.error}`)
+    }
+  }
+  
+  async function handleDeleteCandidate(id: string, name: string) {
+    if (!confirm(`Remove ${name} from the ballot?`)) return
+    const res = await fetch('/api/admin/candidates/manage', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': keyRef.current },
+      body: JSON.stringify({ id }),
+    })
+    if (res.ok) fetchData()
+  }
   const totalVoters = voters.length
   const totalVoted = voters.filter(v => v.has_voted).length
   const turnout = totalVoters ? Math.round((totalVoted / totalVoters) * 100) : 0
