@@ -51,6 +51,7 @@ export default function AdminPage() {
       if (st.ok) { const d = await st.json(); setElectionOpen(d.election_open) }
       if (a.ok) setAuditLog(await a.json())
       if (sd.ok) setSchoolsDepts(await sd.json())
+      if (c.ok) setAdminCandidates(await c.json())
     } catch { /* silent */ }
   }
 
