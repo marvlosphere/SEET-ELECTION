@@ -43,6 +43,11 @@ export async function POST(req: NextRequest) {
     }
 
     const matric = matric_number.toUpperCase().trim()
+    // Check if election is open
+    const { data: settings } = await db.from('election_settings').select('election_open').single()
+    if (!settings?.election_open) {
+      return NextResponse.json({ error: 'Voting is currently closed. Please check back when the election opens.' }, { status: 403 })
+    }
 
     // ── Rate limiting ────────────────────────────────────────────────────────
     const { data: rateData } = await db
