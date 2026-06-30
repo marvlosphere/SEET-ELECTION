@@ -198,12 +198,15 @@ export default function VotePage() {
                         >
                           <div className="flex items-start gap-3">
                             <div className={`mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
-                              selected
-                                ? isAgainst ? 'border-danger bg-danger' : 'border-primary bg-primary'
-                                : 'border-gray-300'
+                              selected ? 'border-primary bg-primary' : 'border-gray-300'
                             }`}>
                               {selected && <div className="w-2 h-2 rounded-full bg-white" />}
                             </div>
+                            {!isAgainst && (
+                              candidate.photo_url
+                                ? <img src={candidate.photo_url} alt={candidate.name} className="w-14 h-14 rounded-full object-cover flex-shrink-0 border-2 border-gray-100" />
+                                : <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 text-gray-400 text-xs">No photo</div>
+                            )}
                             <div className="flex-1">
                               {isAgainst ? (
                                 <>
