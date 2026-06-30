@@ -42,20 +42,22 @@ export default function AdminPage() {
     try {
       const h = { 'x-admin-key': k }
       const t = Date.now()
-      const [r, v, st, a, sd, c] = await Promise.all([
-      fetch(`/api/admin/results?t=${t}`, { headers: h }),
-      fetch(`/api/admin/voters?t=${t}`, { headers: h }),
-      fetch(`/api/admin/settings?t=${t}`, { headers: h }),
-      fetch(`/api/admin/audit-log?t=${t}`, { headers: h }),
-      fetch(`/api/admin/schools-departments?t=${t}`, { headers: h }),
-      fetch(`/api/admin/candidates?t=${t}`, { headers: h }),
-    ])
+      const [r, v, st, a, sd, c, p] = await Promise.all([
+        fetch(`/api/admin/results?t=${t}`, { headers: h }),
+        fetch(`/api/admin/voters?t=${t}`, { headers: h }),
+        fetch(`/api/admin/settings?t=${t}`, { headers: h }),
+        fetch(`/api/admin/audit-log?t=${t}`, { headers: h }),
+        fetch(`/api/admin/schools-departments?t=${t}`, { headers: h }),
+        fetch(`/api/admin/candidates?t=${t}`, { headers: h }),
+        fetch(`/api/admin/positions?t=${t}`, { headers: h }),
+      ])
       if (r.ok) setResults(await r.json())
       if (v.ok) setVoters(await v.json())
       if (st.ok) { const d = await st.json(); setElectionOpen(d.election_open) }
       if (a.ok) setAuditLog(await a.json())
       if (sd.ok) setSchoolsDepts(await sd.json())
       if (c.ok) setAdminCandidates(await c.json())
+      if (p.ok) setPositions(await p.json())
     } catch { /* silent */ }
   }
 
