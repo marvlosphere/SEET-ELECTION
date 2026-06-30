@@ -8,6 +8,7 @@ interface Voter { id: string; matric_number: string; full_name: string; departme
 interface AuditEntry { id: string; event_type: string; matric_number: string | null; ip_address: string | null; details: string | null; success: boolean; created_at: string }
 interface SchoolDept { id: string; school_name: string; dept_name: string; dept_code: string }
 interface AdminCandidate { id: string; name: string; position: string; department: string; level: string; manifesto: string; photo_url: string | null; created_at: string }
+interface PositionItem { id: string; name: string; display_order: number }
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false)
@@ -18,6 +19,9 @@ export default function AdminPage() {
   const [voters, setVoters] = useState<Voter[]>([])
   const [schoolsDepts, setSchoolsDepts] = useState<SchoolDept[]>([])
   const [adminCandidates, setAdminCandidates] = useState<AdminCandidate[]>([])
+  const [positions, setPositions] = useState<PositionItem[]>([])
+  const [newPositionName, setNewPositionName] = useState('')
+  const [positionStatus, setPositionStatus] = useState('')
   const [candForm, setCandForm] = useState({ name: '', position: '', department: '', level: '', manifesto: '', photo_url: '' })
   const [candUploading, setCandUploading] = useState(false)
   const [candSubmitting, setCandSubmitting] = useState(false)
