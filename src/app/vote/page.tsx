@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { POSITIONS, Position, Candidate } from '@/lib/supabase'
+import { Candidate } from '@/lib/supabase'
 
 type Step = 'auth' | 'ballot' | 'confirm' | 'done'
 
@@ -13,6 +13,8 @@ interface VoterSession {
   session_token: string
 }
 
+type Position = string
+
 export default function VotePage() {
   const [step, setStep] = useState<Step>('auth')
   const [matric, setMatric] = useState('')
@@ -22,6 +24,7 @@ export default function VotePage() {
   const [voterSession, setVoterSession] = useState<VoterSession | null>(null)
   const [candidates, setCandidates] = useState<Candidate[]>([])
   const [selections, setSelections] = useState<Record<string, string>>({}) // position → candidate_id
+  const [dynamicPositions, setDynamicPositions] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
 
   // ─── Step 1: Verify token ──────────────────────────────────────────────────
@@ -39,6 +42,12 @@ export default function VotePage() {
       if (!res.ok) { setError(data.error || 'Verification failed'); return }
       setVoterSession(data.voter)
       setCandidates(data.candidates)
+      // Fetch positions from database
+      const posRes = await fetch(`/api/positions?t=${Date.now()}`)
+      if (posRes.ok) {
+        const posData = await posRes.json()
+        setDynamicPositions(posData)
+      }
       setStep('ballot')
     } catch {
       setError('Network error. Please try again.')
@@ -53,7 +62,7 @@ export default function VotePage() {
   }
 
   function allPositionsSelected() {
-    return POSITIONS.every(p => selections[p])
+    return dynamicPositions.every(p => selections[p])
   }
 
   // ─── Step 3: Submit votes ──────────────────────────────────────────────────
@@ -162,7 +171,7 @@ export default function VotePage() {
             </div>
 
             <div className="space-y-6">
-              {POSITIONS.map(position => (
+              {dynamicPositions.map(position => (
                 <div key={position} className="card">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="font-bold text-dark">{position}</h2>
@@ -226,7 +235,7 @@ export default function VotePage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-semibold text-dark">
-                    {Object.keys(selections).length} of {POSITIONS.length} positions selected
+                    {Object.keys(selections).length} of {dynamicPositions.length} positions selected
                   </p>
                   {!allPositionsSelected() && (
                     <p className="text-gray-500 text-sm">Please select a candidate for every position</p>
