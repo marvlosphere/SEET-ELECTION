@@ -204,8 +204,8 @@ export default function VotePage() {
                             </div>
                             {!isAgainst && (
                               candidate.photo_url
-                                ? <img src={candidate.photo_url} alt={candidate.name} className="w-14 h-14 rounded-full object-cover flex-shrink-0 border-2 border-gray-100" />
-                                : <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 text-gray-400 text-xs">No photo</div>
+                                ? <img src={candidate.photo_url} alt={candidate.name} className="w-24 h-24 rounded-full object-cover flex-shrink-0 border-2 border-gray-100" />
+                                  : <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 text-gray-400 text-xs">No photo</div>
                             )}
                             <div className="flex-1">
                               {isAgainst ? (
