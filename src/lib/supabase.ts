@@ -34,6 +34,7 @@ export interface Candidate {
   department: string
   level: string
   manifesto: string
+  photo_url: string | null
   created_at: string
 }
 
