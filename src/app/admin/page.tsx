@@ -544,6 +544,29 @@ export default function AdminPage() {
             <p className="text-gray-500 text-sm mb-6">
               Add candidates one at a time. If a position has only one candidate, a &quot;Vote Against&quot; option is created automatically. Adding a second candidate removes it.
             </p>
+            <div className="card mb-6">
+              <h3 className="font-semibold text-dark mb-3">Manage Positions</h3>
+              <p className="text-gray-500 text-sm mb-3">Define positions before adding candidates. Candidates can only be added to positions on this list.</p>
+              <div className="flex gap-3 mb-4">
+                <input
+                  className="input"
+                  value={newPositionName}
+                  onChange={e => setNewPositionName(e.target.value)}
+                  placeholder="e.g. Director of Welfare"
+                />
+                <button onClick={handleAddPosition} className="btn-primary whitespace-nowrap">Add Position</button>
+              </div>
+              {positionStatus && <p className="text-sm mb-3">{positionStatus}</p>}
+              <div className="flex flex-wrap gap-2">
+                {positions.map(p => (
+                  <span key={p.id} className="badge bg-gray-100 text-gray-700 px-3 py-1.5 flex items-center gap-2">
+                    {p.name}
+                    <button onClick={() => handleDeletePosition(p.id, p.name)} className="text-danger hover:text-red-700 font-bold">×</button>
+                  </span>
+                ))}
+                {positions.length === 0 && <p className="text-gray-400 text-sm">No positions defined yet</p>}
+              </div>
+            </div>
         
             <div className="card mb-6">
               <h3 className="font-semibold text-dark mb-4">Add Candidate</h3>
@@ -554,7 +577,12 @@ export default function AdminPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-dark mb-1.5">Position</label>
-                  <input className="input" value={candForm.position} onChange={e => setCandForm({ ...candForm, position: e.target.value })} placeholder="e.g. President" />
+                  <select className="input" value={candForm.position} onChange={e => setCandForm({ ...candForm, position: e.target.value })}>
+                    <option value="">— Select position —</option>
+                    {positions.map(p => (
+                      <option key={p.id} value={p.name}>{p.name}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-dark mb-1.5">Department</label>
