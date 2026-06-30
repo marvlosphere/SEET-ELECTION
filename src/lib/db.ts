@@ -5,8 +5,9 @@ export function getDb() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
-      db: { schema: 'public' },
-      global: { headers: { 'Cache-Control': 'no-cache' } },
+      global: {
+        fetch: (url, options = {}) => fetch(url, { ...options, cache: 'no-store' }),
+      },
     }
   )
 }
