@@ -16,7 +16,6 @@ export async function POST(req: NextRequest) {
 
   const db = getDb()
 
-  // Get current vote counts per candidate
   const { data: votes } = await db.from('votes').select('candidate_id, position')
   if (!votes) return NextResponse.json({ error: 'No votes found' }, { status: 404 })
 
@@ -31,3 +30,30 @@ export async function POST(req: NextRequest) {
       counts[key] = {
         position: vote.position,
         candidate_id: vote.candidate_id,
+        candidate_name: candidate?.name ?? 'Unknown',
+        vote_count: 0,
+      }
+    }
+    counts[key].vote_count++
+  }
+
+  const totalVotesAtSnapshot = votes.length
+  const { count: totalVotersVoted } = await db
+    .from('voters')
+    .select('*', { count: 'exact', head: true })
+    .eq('has_voted', true)
+
+  const snapshotRows = Object.values(counts).map(c => ({
+    position: c.position,
+    candidate_id: c.candidate_id,
+    candidate_name: c.candidate_name,
+    vote_count: c.vote_count,
+    total_votes_at_snapshot: totalVotesAtSnapshot,
+    total_voters_voted_at_snapshot: totalVotersVoted ?? 0,
+  }))
+
+  const { error } = await db.from('vote_snapshots').insert(snapshotRows)
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+  return NextResponse.json({ success: true, snapshotted: snapshotRows.length })
+}
