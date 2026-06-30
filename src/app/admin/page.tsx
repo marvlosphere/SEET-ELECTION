@@ -84,11 +84,12 @@ export default function AdminPage() {
 
   async function handleUploadVoters() {
     if (!uploadCSV.trim()) return
+    if (!uploadDeptCode) { setUploadStatus('❌ Please select a department first'); return }
     setUploadStatus('Uploading...')
     const res = await fetch('/api/admin/voters/upload', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-admin-key': keyRef.current },
-      body: JSON.stringify({ csv: uploadCSV }),
+      body: JSON.stringify({ csv: uploadCSV, dept_code: uploadDeptCode }),
     })
     const data = await res.json()
     if (res.ok) { setUploadStatus(`✅ ${data.count} voters uploaded. Tokens generated.`); fetchData() }
@@ -213,6 +214,21 @@ export default function AdminPage() {
               <p className="text-gray-500 text-sm mb-3">
                 Paste CSV with columns: <code className="bg-gray-100 px-1 rounded">matric_number, full_name, department, level, phone</code>
               </p>
+              <div className="mb-3">
+                <label className="block text-sm font-medium text-dark mb-1.5">Department (tags every voter in this upload)</label>
+                <select
+                  className="input"
+                  value={uploadDeptCode}
+                  onChange={e => setUploadDeptCode(e.target.value)}
+                >
+                  <option value="">— Select department —</option>
+                  {schoolsDepts.map(sd => (
+                    <option key={sd.id} value={sd.dept_code}>
+                      {sd.dept_code} — {sd.dept_name} ({sd.school_name})
+                    </option>
+                  ))}
+                </select>
+              </div>
               <textarea className="input h-32 font-mono text-sm"
                 placeholder={`matric_number,full_name,department,level,phone\nENG/2021/001,John Doe,Civil Engineering,400,08012345678`}
                 value={uploadCSV} onChange={e => setUploadCSV(e.target.value)} />
