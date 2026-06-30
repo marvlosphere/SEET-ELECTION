@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { POSITIONS, Position } from '@/lib/supabase'
 
 interface ResultRow { candidate_id: string; candidate_name: string; position: Position; vote_count: number }
-interface Voter { id: string; matric_number: string; full_name: string; department: string; level: string; phone: string; has_voted: boolean; token_used: boolean; token: string }
+interface Voter { id: string; matric_number: string; full_name: string; department: string; dept_code: string; level: string; phone: string; has_voted: boolean; token_used: boolean; token: string }
 interface AuditEntry { id: string; event_type: string; matric_number: string | null; ip_address: string | null; details: string | null; success: boolean; created_at: string }
 interface SchoolDept { id: string; school_name: string; dept_name: string; dept_code: string }
 
@@ -241,7 +241,21 @@ export default function AdminPage() {
               {uploadStatus && <p className="mt-3 text-sm">{uploadStatus}</p>}
             </div>
             <div className="card overflow-x-auto">
-              <h3 className="font-semibold text-dark mb-4">Registered Voters ({voters.length})</h3>
+              <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+                <h3 className="font-semibold text-dark">
+                  Registered Voters ({filterDeptCode ? voters.filter(v => v.dept_code === filterDeptCode).length : voters.length})
+                </h3>
+                <select
+                  className="input w-auto"
+                  value={filterDeptCode}
+                  onChange={e => setFilterDeptCode(e.target.value)}
+                >
+                  <option value="">All departments</option>
+                  {schoolsDepts.map(sd => (
+                    <option key={sd.id} value={sd.dept_code}>{sd.dept_code} — {sd.dept_name}</option>
+                  ))}
+                </select>
+              </div>
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-200 text-left">
@@ -254,7 +268,7 @@ export default function AdminPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
-                  {voters.map(voter => (
+                  {(filterDeptCode ? voters.filter(v => v.dept_code === filterDeptCode) : voters).map(voter => (
                     <tr key={voter.id}>
                       <td className="py-2 font-mono text-xs">{voter.matric_number}</td>
                       <td className="py-2">{voter.full_name}</td>
