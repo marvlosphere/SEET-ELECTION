@@ -12,8 +12,7 @@ export default function AdminPage() {
   const [authed, setAuthed] = useState(false)
   const [adminKey, setAdminKey] = useState('')
   const [authError, setAuthError] = useState('')
-  const [tab, setTab] = useState<'dashboard' | 'voters' | 'results' | 'whatsapp' | 'settings'>('dashboard')
-  const [results, setResults] = useState<ResultRow[]>([])
+  const [tab, setTab] = useState<'dashboard' | 'voters' | 'results' | 'whatsapp' | 'audit' | 'settings'>('dashboard')  const [results, setResults] = useState<ResultRow[]>([])
   const [voters, setVoters] = useState<Voter[]>([])
   const [auditLog, setAuditLog] = useState<AuditEntry[]>([])
   const [electionOpen, setElectionOpen] = useState(false)
@@ -152,7 +151,7 @@ export default function AdminPage() {
 
       <div className="bg-white border-b border-gray-200 px-6">
         <div className="flex gap-1">
-          {(['dashboard', 'voters', 'results', 'whatsapp', 'settings'] as const).map(t => (
+          {(['dashboard', 'voters', 'results', 'whatsapp', 'audit', 'settings'] as const).map(t => (
             <button key={t} onClick={() => setTab(t)}
               className={`px-4 py-3 text-sm font-medium capitalize border-b-2 transition-colors ${tab === t ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-dark'}`}>
               {t}
