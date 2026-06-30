@@ -173,6 +173,35 @@ export default function AdminPage() {
     })
     if (res.ok) fetchData()
   }
+  async function handleAddPosition() {
+    if (!newPositionName.trim()) return
+    setPositionStatus('Adding...')
+    const res = await fetch('/api/admin/positions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': keyRef.current },
+      body: JSON.stringify({ name: newPositionName.trim() }),
+    })
+    const data = await res.json()
+    if (res.ok) {
+      setPositionStatus(`✅ "${newPositionName}" added`)
+      setNewPositionName('')
+      fetchData()
+    } else {
+      setPositionStatus(`❌ ${data.error}`)
+    }
+  }
+  
+  async function handleDeletePosition(id: string, name: string) {
+    if (!confirm(`Remove position "${name}"? This only works if no candidates are assigned to it.`)) return
+    const res = await fetch('/api/admin/positions', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': keyRef.current },
+      body: JSON.stringify({ id }),
+    })
+    const data = await res.json()
+    if (res.ok) fetchData()
+    else alert(data.error)
+  }
   const totalVoters = voters.length
   const totalVoted = voters.filter(v => v.has_voted).length
   const turnout = totalVoters ? Math.round((totalVoted / totalVoters) * 100) : 0
