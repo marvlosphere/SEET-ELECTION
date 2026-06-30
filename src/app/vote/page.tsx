@@ -260,7 +260,7 @@ export default function VotePage() {
             <p className="text-gray-500 text-sm mb-6">Once submitted, your vote cannot be changed.</p>
 
             <div className="space-y-3 mb-8">
-              {POSITIONS.map(position => {
+              {dynamicPositions.map(position => {
                 const candidate = candidates.find(c => c.id === selections[position])
                 return (
                   <div key={position} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
