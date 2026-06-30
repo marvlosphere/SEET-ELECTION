@@ -46,8 +46,11 @@ export default function AdminPage() {
     if (!authed) return
     fetchData()
     const interval = setInterval(fetchData, 5000)
-    return () => clearInterval(interval)
-  }, [authed])
+    const snapshotInterval = setInterval(() => {
+      fetch('/api/admin/snapshot', { method: 'POST', headers: { 'x-admin-key': keyRef.current } }).catch(() => {})
+  }, 5 * 60 * 1000)
+  return () => { clearInterval(interval); clearInterval(snapshotInterval) }
+}, [authed])
 
   async function handleAdminAuth(e: React.FormEvent) {
     e.preventDefault()
