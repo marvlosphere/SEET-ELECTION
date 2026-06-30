@@ -25,8 +25,14 @@ export async function POST(req: NextRequest) {
     if (!name?.trim() || !position?.trim()) {
       return NextResponse.json({ error: 'Name and position are required' }, { status: 400 })
     }
-
+    
     const db = getDb()
+    
+    // Validate position exists in the positions table
+    const { data: validPosition } = await db.from('positions').select('id').eq('name', position.trim()).single()
+    if (!validPosition) {
+      return NextResponse.json({ error: `"${position}" is not a defined position. Create it first under Positions.` }, { status: 400 })
+    }
 
     // Check existing real candidates for this position (exclude AGAINST placeholders)
     const { data: existing } = await db
