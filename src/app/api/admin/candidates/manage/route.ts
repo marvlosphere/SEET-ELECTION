@@ -104,9 +104,15 @@ export async function DELETE(req: NextRequest) {
         .eq('position', target.position)
 
       const realRemaining = (remaining ?? []).filter(c => c.manifesto !== 'AGAINST')
-      const hasAgainst = (remaining ?? []).some(c => c.manifesto === 'AGAINST')
-
-      if (realRemaining.length === 1 && !hasAgainst) {
+      const againstRemaining = (remaining ?? []).find(c => c.manifesto === 'AGAINST')
+      
+      if (realRemaining.length === 0) {
+        // No real candidates left — remove the Against placeholder too if it exists
+        if (againstRemaining) {
+          await db.from('candidates').delete().eq('id', againstRemaining.id)
+        }
+      } else if (realRemaining.length === 1 && !againstRemaining) {
+        // One real candidate remains, no Against option yet — create it
         const sole = realRemaining[0]
         await db.from('candidates').insert({
           name: sole.name,
