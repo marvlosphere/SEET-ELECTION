@@ -16,7 +16,8 @@ export async function GET(req: NextRequest) {
 
   const { count: total_voters } = await db.from('voters').select('*', { count: 'exact', head: true })
   const { count: total_voted } = await db.from('voters').select('*', { count: 'exact', head: true }).eq('has_voted', true)
-  const { count: total_votes_cast } = await db.from('votes').select('*', { count: 'exact', head: true })
+  const { data: allVotes } = await db.from('votes').select('id')
+  const total_votes_cast = allVotes?.length ?? 0
   const { count: snapshot_count } = await db.from('vote_snapshots').select('*', { count: 'exact', head: true })
 
   const { data: lastSnapshot } = await db
