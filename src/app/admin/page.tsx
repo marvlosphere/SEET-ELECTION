@@ -5,6 +5,8 @@ import { POSITIONS, Position } from '@/lib/supabase'
 
 interface ResultRow { candidate_id: string; candidate_name: string; position: Position; vote_count: number }
 interface Voter { id: string; matric_number: string; full_name: string; department: string; level: string; phone: string; has_voted: boolean; token_used: boolean; token: string }
+interface AuditEntry { id: string; event_type: string; matric_number: string | null; ip_address: string | null; details: string | null; success: boolean; created_at: string }
+
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false)
@@ -13,6 +15,7 @@ export default function AdminPage() {
   const [tab, setTab] = useState<'dashboard' | 'voters' | 'results' | 'whatsapp' | 'settings'>('dashboard')
   const [results, setResults] = useState<ResultRow[]>([])
   const [voters, setVoters] = useState<Voter[]>([])
+  const [auditLog, setAuditLog] = useState<AuditEntry[]>([])
   const [electionOpen, setElectionOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [uploadCSV, setUploadCSV] = useState('')
@@ -26,14 +29,16 @@ export default function AdminPage() {
     try {
       const h = { 'x-admin-key': k }
       const t = Date.now()
-      const [r, v, st] = await Promise.all([
+      const [r, v, st, a] = await Promise.all([
         fetch(`/api/admin/results?t=${t}`, { headers: h }),
         fetch(`/api/admin/voters?t=${t}`, { headers: h }),
         fetch(`/api/admin/settings?t=${t}`, { headers: h }),
+        fetch(`/api/admin/audit-log?t=${t}`, { headers: h }),
       ])
       if (r.ok) setResults(await r.json())
       if (v.ok) setVoters(await v.json())
       if (st.ok) { const d = await st.json(); setElectionOpen(d.election_open) }
+      if (a.ok) setAuditLog(await a.json())
     } catch { /* silent */ }
   }
 
