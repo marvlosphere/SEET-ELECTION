@@ -387,7 +387,8 @@ export default function AdminPage() {
           <div>
             <h2 className="text-xl font-bold text-dark mb-6">Live Results</h2>
             <div className="space-y-4">
-              {dynamicPositions.map(position => {
+              {positions.map(p => {
+                const position = p.name
                 const positionCandidates = results.filter(r => r.position === position)
                 const forVotes = positionCandidates.filter(r => !r.candidate_name.startsWith('AGAINST:'))
                 const againstEntries = positionCandidates.filter(r => r.candidate_name.startsWith('AGAINST:'))
