@@ -36,13 +36,13 @@ export default function IntegrityPage() {
     <main className="min-h-screen bg-light">
       <div className="bg-primary text-white px-6 py-4 flex items-center justify-between">
         <Link href="/" className="text-white/70 hover:text-white text-sm">← Back</Link>
-        <span className="font-semibold text-sm">Election Integrity Check</span>
+        <span className="font-semibold text-sm">FUTABallot — Integrity Check</span>
         <span className="text-white/40 text-xs">Public</span>
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-10">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-dark mb-2">Election Integrity Dashboard</h1>
+          <h1 className="text-2xl font-bold text-dark mb-2">FUTABallot Integrity Dashboard</h1>
           <p className="text-gray-500 text-sm">
             This page is publicly viewable so anyone can verify the election is running honestly.
             Numbers update every 10 seconds.
