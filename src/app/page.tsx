@@ -9,7 +9,7 @@ export default function HomePage() {
           <img
             src="https://res.cloudinary.com/qhpxmquy/image/upload/v1782873345/43916d76-f263-4ba5-8536-2c1fdbedac43_tuceif.png"
             alt="FUTA Logo"
-            className="w-10 h-10 object-contain"
+            className="w-10 h-10 object-cover rounded-full border-2 border-white/20"
           />
           <span className="text-white font-semibold text-sm leading-tight">
             Federal University of<br />
@@ -27,7 +27,7 @@ export default function HomePage() {
           <img
             src="https://res.cloudinary.com/qhpxmquy/image/upload/v1782873345/43916d76-f263-4ba5-8536-2c1fdbedac43_tuceif.png"
             alt="FUTA Logo"
-            className="w-24 h-24 object-contain mx-auto mb-4 drop-shadow-lg"
+            className="w-24 h-24 object-cover mx-auto mb-4 rounded-full border-4 border-white/20 shadow-lg"
           />
         </div>
 
