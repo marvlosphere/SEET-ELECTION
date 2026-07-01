@@ -108,7 +108,6 @@ export async function POST(req: NextRequest) {
       success: false,
     })
     return NextResponse.json({
-    return NextResponse.json({
       error: `The admin panel is currently open on ${MAX_ADMIN_SESSIONS} devices, which is the maximum allowed. Please ask one of the active admins to log out, or wait up to 3 minutes for inactive sessions to expire automatically.`
     }, { status: 429 })
   }
