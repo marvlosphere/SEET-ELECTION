@@ -323,11 +323,26 @@ export default function AdminPage() {
                 <button onClick={toggleElection} className={electionOpen ? 'btn-danger' : 'btn-primary'}>
                   {electionOpen ? 'Close Election' : 'Open Election'}
                 </button>
+                <button onClick={fetchData} className="btn-primary bg-gray-600 hover:bg-gray-700">
+                  Refresh Data
+                </button>
                 <button
                   onClick={() => fetch('/api/admin/snapshot', { method: 'POST', headers: { 'x-admin-key': keyRef.current } }).then(() => fetchData())}
                   className="btn-accent"
                 >
                   📸 Take Snapshot
+                </button>
+                <button
+                  onClick={async () => {
+                    if (!confirm('This will permanently delete ALL voters, votes, sessions and snapshots. This cannot be undone. Are you sure?')) return
+                    if (!confirm('Second confirmation: delete everything and reset for the next election?')) return
+                    const res = await fetch('/api/admin/reset', { method: 'POST', headers: { 'x-admin-key': keyRef.current } })
+                    if (res.ok) { alert('Election data cleared successfully.'); fetchData() }
+                    else { const d = await res.json(); alert(`Error: ${d.error}`) }
+                  }}
+                  className="btn-danger"
+                >
+                  🗑️ Reset Election Data
                 </button>
               </div>
             </div>
