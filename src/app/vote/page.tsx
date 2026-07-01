@@ -121,6 +121,12 @@ export default function VotePage() {
               <p className="text-gray-500 mt-2 text-sm">
                 Enter your matric number and the token sent to your phone
               </p>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mt-4 text-left">
+                <p className="text-amber-800 text-xs font-semibold mb-1">⚠️ Network Advisory</p>
+                <p className="text-amber-700 text-xs leading-relaxed">
+                  Please vote using your personal mobile data, not a shared network like FUTANet or a public hotspot. Shared networks may cause your vote to be blocked if too many students vote from the same connection.
+                </p>
+              </div>
             </div>
 
             <form onSubmit={handleAuth} className="space-y-4">
