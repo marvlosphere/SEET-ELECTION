@@ -69,6 +69,7 @@ export default function AdminPage() {
   useEffect(() => {
     if (!authed) return
     fetchData()
+    const interval = setInterval(fetchData, 5000)
     const heartbeatInterval = setInterval(() => {
       if (sessionTokenRef.current) {
         fetch('/api/admin/sessions', {
@@ -77,9 +78,12 @@ export default function AdminPage() {
           body: JSON.stringify({ session_token: sessionTokenRef.current }),
         }).catch(() => {})
       }
-    }, * 60 * 1000) // every 2 minutes
-  return () => { clearInterval(interval); clearInterval(heartbeatInterval); clearInterval(snapshotInterval) }
-}, [authed])
+    }, 60 * 1000)
+    const snapshotInterval = setInterval(() => {
+      fetch('/api/admin/snapshot', { method: 'POST', headers: { 'x-admin-key': keyRef.current } }).catch(() => {})
+    }, 5 * 60 * 1000)
+    return () => { clearInterval(interval); clearInterval(heartbeatInterval); clearInterval(snapshotInterval) }
+  }, [authed])
 
   async function handleAdminAuth(e: React.FormEvent) {
     e.preventDefault()
