@@ -723,18 +723,6 @@ export default function AdminPage() {
                   <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${electionOpen ? 'translate-x-6' : 'translate-x-1'}`} />
                 </button>
               </div>
-              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
-                <p className="font-semibold text-dark text-sm">Environment Variables Needed</p>
-                <p className="text-gray-600 text-xs mt-1 mb-2">Set these in your Vercel dashboard:</p>
-                <div className="font-mono text-xs space-y-1 text-gray-700">
-                  <p>NEXT_PUBLIC_SUPABASE_URL</p>
-                  <p>NEXT_PUBLIC_SUPABASE_ANON_KEY</p>
-                  <p>SUPABASE_SERVICE_ROLE_KEY</p>
-                  <p>ADMIN_KEY</p>
-                  <p>TERMII_API_KEY (for SMS)</p>
-                  <p>TERMII_SENDER_ID</p>
-                </div>
-              </div>
             </div>
           </div>
         )}
