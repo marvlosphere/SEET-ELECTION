@@ -727,28 +727,26 @@ export default function AdminPage() {
   </div>
 )}
         {tab === 'settings' && (
-          <div className="card max-w-lg">
-            <h2 className="text-xl font-bold text-dark mb-6">Election Settings</h2>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                <div>
-                  <p className="font-semibold text-dark">Election Status</p>
-                  <p className="text-gray-500 text-sm">Allow students to vote</p>
-                </div>
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                  <div>
-                    <p className="font-semibold text-dark">Active Admin Sessions</p>
-                    <p className="text-gray-500 text-sm">Devices currently logged into the admin panel</p>
-                  </div>
-                  <span className="badge bg-primary text-white text-sm px-3 py-1.5">
-                    {adminSessions} / 3
-                  </span>
-                </div>
-                <button onClick={toggleElection}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${electionOpen ? 'bg-success' : 'bg-gray-300'}`}>
-                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${electionOpen ? 'translate-x-6' : 'translate-x-1'}`} />
-                </button>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+              <div>
+                <p className="font-semibold text-dark">Election Status</p>
+                <p className="text-gray-500 text-sm">Allow students to vote</p>
               </div>
+              <button onClick={toggleElection}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${electionOpen ? 'bg-success' : 'bg-gray-300'}`}>
+                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${electionOpen ? 'translate-x-6' : 'translate-x-1'}`} />
+              </button>
+            </div>
+          
+            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+              <div>
+                <p className="font-semibold text-dark">Active Admin Sessions</p>
+                <p className="text-gray-500 text-sm">Devices currently logged into the admin panel</p>
+              </div>
+              <span className={`badge text-white text-sm px-3 py-1.5 ${adminSessions >= 3 ? 'bg-danger' : 'bg-primary'}`}>
+                {adminSessions} / 3
+              </span>
             </div>
           </div>
         )}
