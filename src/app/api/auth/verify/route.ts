@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
             }, { status: 403 })
           }
     
-          if (geoData.proxy === true || geoData.hosting === true) {
+          if (geoData.proxy === true) {
             await logEvent(db, {
               event_type: 'AUTH_BLOCKED_VPN',
               matric_number: matric,
