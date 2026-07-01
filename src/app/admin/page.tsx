@@ -77,7 +77,7 @@ export default function AdminPage() {
           body: JSON.stringify({ session_token: sessionTokenRef.current }),
         }).catch(() => {})
       }
-    }, 2 * 60 * 1000) // every 2 minutes
+    }, * 60 * 1000) // every 2 minutes
   return () => { clearInterval(interval); clearInterval(heartbeatInterval); clearInterval(snapshotInterval) }
 }, [authed])
 
