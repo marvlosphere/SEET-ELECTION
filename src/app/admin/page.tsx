@@ -100,7 +100,10 @@ export default function AdminPage() {
       sessionTokenRef.current = data.session_token
       setAuthed(true)
       setAuthError('')
-    } else setAuthError('Invalid admin key.')
+    } else {
+      const data = await res.json()
+      setAuthError(data.error || 'Invalid admin key.')
+    }
   }
 
   async function toggleElection() {
