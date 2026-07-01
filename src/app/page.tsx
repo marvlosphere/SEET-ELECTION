@@ -54,10 +54,17 @@ export default function HomePage() {
         >
           Vote Now
         </Link>
-
+        
         <p className="mt-6 text-white/40 text-sm">
           Token sent via SMS at registration
         </p>
+        
+        <Link
+          href="/integrity"
+          className="mt-3 text-white/40 hover:text-white/70 text-xs underline underline-offset-2 transition-colors"
+        >
+          🔍 View Election Integrity Dashboard
+        </Link>
       </div>
 
       {/* Positions preview */}
