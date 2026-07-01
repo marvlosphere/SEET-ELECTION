@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'SEET Elections',
-  description: 'School of Engineering & Engineering Technology — Student Elections',
+  title: 'FUTABallot',
+  description: 'Federal University of Technology, Akure — Secure Student Elections',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
