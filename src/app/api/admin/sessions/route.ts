@@ -20,7 +20,10 @@ export async function GET(req: NextRequest) {
   if (!isAdminAuthed(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const db = getDb()
-  await db.from('admin_sessions').delete().lt('expires_at', new Date().toISOString())
+  const staleThreshold = new Date(Date.now() - 30 * 60 * 1000).toISOString()
+  await db.from('admin_sessions')
+    .delete()
+    .or(`expires_at.lt.${new Date().toISOString()},last_active.lt.${staleThreshold}`)
 
   const { data } = await db
     .from('admin_sessions')
@@ -33,4 +36,17 @@ export async function GET(req: NextRequest) {
   }, {
     headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate' },
   })
+}
+
+export async function POST(req: NextRequest) {
+  if (!isAdminAuthed(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const db = getDb()
+  const { session_token } = await req.json()
+  if (session_token) {
+    await db.from('admin_sessions')
+      .update({ last_active: new Date().toISOString() })
+      .eq('session_token', session_token)
+  }
+  return NextResponse.json({ success: true })
 }
