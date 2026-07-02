@@ -423,6 +423,16 @@ export default function AdminPage() {
                 >
                   📸 Take Snapshot
                 </button>
+                <button
+                  onClick={async () => {
+                    if (!confirm('Delete all vote snapshots? This removes historical integrity proof. This cannot be undone.')) return
+                    const res = await fetch('/api/admin/snapshot', { method: 'DELETE', headers: { 'x-admin-key': keyRef.current } })
+                    if (res.ok) { alert('Snapshots cleared.'); fetchData() }
+                  }}
+                  className="btn-danger"
+                >
+                  🗑️ Clear Snapshots
+                </button>
                 <div className="flex items-center gap-2 flex-wrap">
                   <select
                     className="input w-auto text-sm"
