@@ -66,3 +66,18 @@ export async function DELETE(req: NextRequest) {
 
   return NextResponse.json({ success: true })
 }
+
+export async function GET(req: NextRequest) {
+  if (!isAdminAuthed(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const db = getDb()
+  const { data } = await db
+    .from('vote_snapshots')
+    .select('id, position, candidate_name, vote_count, total_votes_at_snapshot, total_voters_voted_at_snapshot, snapshot_at')
+    .order('snapshot_at', { ascending: false })
+    .limit(500)
+
+  return NextResponse.json(data ?? [], {
+    headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate' },
+  })
+}
