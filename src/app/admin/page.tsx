@@ -483,6 +483,37 @@ export default function AdminPage() {
               </div>
             </div>
           </div>
+        <div className="card mt-6">
+          <h3 className="font-bold text-dark mb-4">Snapshot History ({snapshots.length})</h3>
+          {snapshots.length === 0 ? (
+            <p className="text-gray-400 text-sm">No snapshots taken yet</p>
+          ) : (
+            <div className="overflow-x-auto max-h-96 overflow-y-auto">
+              <table className="w-full text-sm">
+                <thead className="sticky top-0 bg-white">
+                  <tr className="border-b border-gray-200 text-left">
+                    <th className="pb-2 font-medium text-gray-500">Time</th>
+                    <th className="pb-2 font-medium text-gray-500">Position</th>
+                    <th className="pb-2 font-medium text-gray-500">Candidate</th>
+                    <th className="pb-2 font-medium text-gray-500">Votes</th>
+                    <th className="pb-2 font-medium text-gray-500">Total at Snapshot</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {snapshots.map(s => (
+                    <tr key={s.id}>
+                      <td className="py-2 text-xs text-gray-500 whitespace-nowrap">{new Date(s.snapshot_at).toLocaleString()}</td>
+                      <td className="py-2 text-xs">{s.position}</td>
+                      <td className="py-2 text-xs">{s.candidate_name}</td>
+                      <td className="py-2 text-xs font-semibold">{s.vote_count}</td>
+                      <td className="py-2 text-xs text-gray-400">{s.total_votes_at_snapshot}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
         )}
 
         {tab === 'voters' && (
