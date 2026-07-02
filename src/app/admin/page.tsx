@@ -33,6 +33,10 @@ export default function AdminPage() {
   const [candStatus, setCandStatus] = useState('')
   const [uploadDeptCode, setUploadDeptCode] = useState('')
   const [filterDeptCode, setFilterDeptCode] = useState('')
+  const [regenMatric, setRegenMatric] = useState('')
+  const [regenStatus, setRegenStatus] = useState('')
+  const [regenResult, setRegenResult] = useState<{ full_name: string; matric_number: string; phone: string; token: string } | null>(null)
+  const [regenLoading, setRegenLoading] = useState(false)
   const [auditLog, setAuditLog] = useState<AuditEntry[]>([])
   const [electionOpen, setElectionOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -148,6 +152,27 @@ export default function AdminPage() {
     setSendingTokens(false)
     if (res.ok) setUploadStatus(`✅ Tokens sent to ${data.sent} voters via SMS`)
     else setUploadStatus(`❌ ${data.error}`)
+  }
+
+  async function handleRegenerateToken() {
+    if (!regenMatric.trim()) return
+    setRegenLoading(true)
+    setRegenStatus('')
+    setRegenResult(null)
+    const res = await fetch('/api/admin/voters/regenerate-token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': keyRef.current },
+      body: JSON.stringify({ matric_number: regenMatric }),
+    })
+    const data = await res.json()
+    setRegenLoading(false)
+    if (res.ok) {
+      setRegenStatus(`✅ New token generated for ${data.voter.full_name}`)
+      setRegenResult(data.voter)
+      fetchData()
+    } else {
+      setRegenStatus(`❌ ${data.error}`)
+    }
   }
   async function handlePhotoUpload(file: File) {
     const MAX_SIZE_MB = 2
@@ -578,6 +603,38 @@ export default function AdminPage() {
                 </div>
               </div>
               {uploadStatus && <p className="mt-3 text-sm whitespace-pre-line">{uploadStatus}</p>}
+            </div>
+            <div className="card mb-6">
+              <h3 className="font-semibold text-dark mb-3">Regenerate Token for One Student</h3>
+              <p className="text-gray-500 text-sm mb-3">
+                Use this if a student didn&apos;t receive their token or lost it. This invalidates their old token and creates a new one.
+              </p>
+              <div className="flex gap-3">
+                <input
+                  className="input"
+                  placeholder="e.g. MEE/23/5072"
+                  value={regenMatric}
+                  onChange={e => setRegenMatric(e.target.value)}
+                />
+                <button onClick={handleRegenerateToken} disabled={regenLoading} className="btn-primary whitespace-nowrap">
+                  {regenLoading ? 'Working...' : 'Regenerate Token'}
+                </button>
+              </div>
+              {regenStatus && <p className="mt-3 text-sm">{regenStatus}</p>}
+              {regenResult && (
+                <div className="mt-3 p-3 bg-gray-50 rounded-lg text-sm">
+                  <p><strong>{regenResult.full_name}</strong> ({regenResult.matric_number})</p>
+                  <p className="font-mono text-primary mt-1">New token: {regenResult.token}</p>
+                  
+                    href={`https://wa.me/${regenResult.phone.startsWith('+') ? regenResult.phone.replace('+', '') : '234' + regenResult.phone.slice(1)}?text=${encodeURIComponent(`Hello ${regenResult.full_name.split(' ')[0]}, your new FUTABallot voting token is: ${regenResult.token}\n\nMatric: ${regenResult.matric_number}\nVote at: futa-ballot.vercel.app/vote\n\nYour previous token is no longer valid.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg mt-2"
+                  >
+                    📱 Send via WhatsApp
+                  </a>
+                </div>
+              )}
             </div>
             <div className="card overflow-x-auto">
               <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
