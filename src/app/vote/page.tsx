@@ -41,7 +41,7 @@ export default function VotePage() {
       const data = await res.json()
       if (!res.ok) { setError(data.error || 'Verification failed'); return }
       setVoterSession(data.voter)
-      setCandidates(data.candidates)
+      setCandidates(shuffleCandidatesKeepingAgainstLast(data.candidates))
       // Fetch positions from database
       const posRes = await fetch(`/api/positions?t=${Date.now()}`)
       if (posRes.ok) {
@@ -93,6 +93,29 @@ export default function VotePage() {
     }
   }
 
+  function shuffleCandidatesKeepingAgainstLast(list: Candidate[]): Candidate[] {
+    const byPosition: Record<string, Candidate[]> = {}
+    list.forEach(c => {
+      if (!byPosition[c.position]) byPosition[c.position] = []
+      byPosition[c.position].push(c)
+    })
+  
+    const result: Candidate[] = []
+    Object.values(byPosition).forEach(group => {
+      const real = group.filter(c => c.manifesto !== 'AGAINST')
+      const against = group.filter(c => c.manifesto === 'AGAINST')
+  
+      // Fisher-Yates shuffle for real candidates only
+      for (let i = real.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[real[i], real[j]] = [real[j], real[i]]
+      }
+  
+      result.push(...real, ...against)
+    })
+  
+    return result
+  }
   const candidatesForPosition = (position: Position) =>
     candidates.filter(c => c.position === position)
 
