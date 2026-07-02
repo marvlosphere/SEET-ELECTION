@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     const phoneRegex = /^\+?[0-9]{10,14}$/
 
     const voters = dataLines.map((line: string, idx: number) => {
-      const rowNum = idx + 2 // account for header row + 1-index
+      const rowNum = idx + (lines[0].toLowerCase().includes('matric') ? 2 : 1)
       const parts = line.split(',').map((s: string) => s.trim())
 
       if (parts.length < 5) {
