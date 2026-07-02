@@ -394,6 +394,21 @@ export default function AdminPage() {
         {tab === 'dashboard' && (
           <div>
             <h2 className="text-xl font-bold text-dark mb-6">Overview</h2>
+        
+            <div className="card mb-6 bg-blue-50 border border-blue-100">
+              <h3 className="font-bold text-dark mb-3 text-sm">📋 How to Run an Election</h3>
+              <ol className="text-sm text-gray-700 space-y-1.5 list-decimal list-inside">
+                <li>Go to <strong>Candidates</strong> → add each position under &quot;Manage Positions&quot;</li>
+                <li>Add every candidate to their position, with photo and manifesto</li>
+                <li>Go to <strong>Voters</strong> → select department → paste CSV → upload</li>
+                <li>Send tokens to students via SMS or the WhatsApp tab</li>
+                <li>When ready, toggle <strong>Open Election</strong> below or in Settings</li>
+                <li>Monitor turnout here and check the public Integrity page</li>
+                <li>Toggle <strong>Close Election</strong> once voting ends</li>
+                <li>Go to <strong>Results</strong> → Export PDF for the official record</li>
+                <li>Once results are confirmed, use <strong>Reset Election Data</strong> below to clear voters and votes before the next election (candidates and positions stay unless you remove them separately)</li>
+              </ol>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               <div className="card text-center">
                 <p className="text-3xl font-bold text-primary">{totalVoters || '—'}</p>
