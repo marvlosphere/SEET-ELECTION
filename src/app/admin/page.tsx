@@ -126,8 +126,13 @@ export default function AdminPage() {
       body: JSON.stringify({ csv: uploadCSV, dept_code: uploadDeptCode }),
     })
     const data = await res.json()
-    if (res.ok) { setUploadStatus(`✅ ${data.count} voters uploaded. Tokens generated.`); fetchData() }
-    else setUploadStatus(`❌ Error: ${data.error}`)
+    if (res.ok) {
+      setUploadStatus(`✅ ${data.count} voters uploaded. Tokens generated.`)
+      fetchData()
+    } else {
+      const detailsText = data.details ? '\n' + data.details.join('\n') : ''
+      setUploadStatus(`❌ ${data.error}${detailsText}`)
+    }
   }
 
   async function handleSendTokens() {
@@ -415,7 +420,7 @@ export default function AdminPage() {
                   </button>
                 </div>
               </div>
-              {uploadStatus && <p className="mt-3 text-sm">{uploadStatus}</p>}
+              {uploadStatus && <p className="mt-3 text-sm whitespace-pre-line">{uploadStatus}</p>}
             </div>
             <div className="card overflow-x-auto">
               <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
