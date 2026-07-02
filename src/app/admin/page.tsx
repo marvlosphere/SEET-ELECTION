@@ -634,7 +634,7 @@ export default function AdminPage() {
                     </button>
                   </div>
                   
-                    <a href={`https://wa.me/${regenResult.phone.startsWith('+') ? regenResult.phone.replace('+', '') : '234' + regenResult.phone.slice(1)}?text=${encodeURIComponent(`Hello ${regenResult.full_name.split(' ')[0]}, your new FUTABallot voting token is: ${regenResult.token}\n\nMatric: ${regenResult.matric_number}\nVote at: https://seet-election.vercel.app/vote\n\nYour previous token is no longer valid.`)}`}
+                    <a href={`https://wa.me/${regenResult.phone.startsWith('+') ? regenResult.phone.replace('+', '') : '234' + regenResult.phone.slice(1)}?text=${encodeURIComponent(`Hello ${regenResult.full_name.split(' ')[0]}, your new FUTABallot voting token is: ${regenResult.token}\n\nMatric: ${regenResult.matric_number}\nVote at: https://futaballot.vercel.app/vote\n\nYour previous token is no longer valid.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg mt-2"
