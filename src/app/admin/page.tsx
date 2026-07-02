@@ -10,6 +10,7 @@ interface AuditEntry { id: string; event_type: string; matric_number: string | n
 interface SchoolDept { id: string; school_name: string; dept_name: string; dept_code: string }
 interface AdminCandidate { id: string; name: string; position: string; department: string; level: string; manifesto: string; photo_url: string | null; created_at: string }
 interface PositionItem { id: string; name: string; display_order: number }
+interface SnapshotEntry { id: string; position: string; candidate_name: string; vote_count: number; total_votes_at_snapshot: number; total_voters_voted_at_snapshot: number; snapshot_at: string }
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false)
@@ -25,6 +26,7 @@ export default function AdminPage() {
   const [positionStatus, setPositionStatus] = useState('')
   const [adminSessions, setAdminSessions] = useState(0)
   const [resetDeptCode, setResetDeptCode] = useState('')
+  const [snapshots, setSnapshots] = useState<SnapshotEntry[]>([])
   const [candForm, setCandForm] = useState({ name: '', position: '', department: '', level: '', manifesto: '', photo_url: '' })
   const [candUploading, setCandUploading] = useState(false)
   const [candSubmitting, setCandSubmitting] = useState(false)
@@ -56,6 +58,7 @@ export default function AdminPage() {
         fetch(`/api/admin/candidates?t=${t}`, { headers: h }),
         fetch(`/api/admin/positions?t=${t}`, { headers: h }),
         fetch(`/api/admin/sessions?t=${t}`, { headers: h }),
+        fetch(`/api/admin/snapshot?t=${t}`, { headers: h }),
       ])
       if (r.ok) setResults(await r.json())
       if (v.ok) setVoters(await v.json())
@@ -65,6 +68,7 @@ export default function AdminPage() {
       if (c.ok) setAdminCandidates(await c.json())
       if (p.ok) setPositions(await p.json())
       if (ses.ok) { const s = await ses.json(); setAdminSessions(s.count) }
+      if (snap.ok) setSnapshots(await snap.json())
     } catch { /* silent */ }
   }
 
