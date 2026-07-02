@@ -20,23 +20,23 @@ export async function POST(req: NextRequest) {
   if (!votes) return NextResponse.json({ error: 'No votes found' }, { status: 404 })
 
   const candidateIds = Array.from(new Set(votes.map(v => v.candidate_id)))
-  const { data: candidates } = await db.from('candidates').select('id, name').in('id', candidateIds)
+  const { data: candidates } = await db.from('candidates').select('id, name, manifesto').in('id', candidateIds)
 
   const counts: Record<string, { position: string; candidate_id: string; candidate_name: string; vote_count: number }> = {}
   for (const vote of votes) {
     const key = vote.candidate_id
     if (!counts[key]) {
       const candidate = candidates?.find(c => c.id === vote.candidate_id)
+      const isAgainst = candidate?.manifesto === 'AGAINST'
       counts[key] = {
         position: vote.position,
         candidate_id: vote.candidate_id,
-        candidate_name: candidate?.name ?? 'Unknown',
+        candidate_name: isAgainst ? `Against: ${candidate?.name ?? 'Unknown'}` : (candidate?.name ?? 'Unknown'),
         vote_count: 0,
       }
     }
     counts[key].vote_count++
   }
-
   const totalVotesAtSnapshot = votes.length
   const { count: totalVotersVoted } = await db
     .from('voters')
