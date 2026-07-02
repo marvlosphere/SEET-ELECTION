@@ -624,9 +624,17 @@ export default function AdminPage() {
               {regenResult && (
                 <div className="mt-3 p-3 bg-gray-50 rounded-lg text-sm">
                   <p><strong>{regenResult.full_name}</strong> ({regenResult.matric_number})</p>
-                  <p className="font-mono text-primary mt-1">New token: {regenResult.token}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <p className="font-mono text-primary">New token: {regenResult.token}</p>
+                    <button
+                      onClick={() => { navigator.clipboard.writeText(regenResult.token); setRegenStatus('✅ Token copied to clipboard') }}
+                      className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded"
+                    >
+                      📋 Copy
+                    </button>
+                  </div>
                   
-                    href={`https://wa.me/${regenResult.phone.startsWith('+') ? regenResult.phone.replace('+', '') : '234' + regenResult.phone.slice(1)}?text=${encodeURIComponent(`Hello ${regenResult.full_name.split(' ')[0]}, your new FUTABallot voting token is: ${regenResult.token}\n\nMatric: ${regenResult.matric_number}\nVote at: futa-ballot.vercel.app/vote\n\nYour previous token is no longer valid.`)}`}
+                    href={`https://wa.me/${regenResult.phone.startsWith('+') ? regenResult.phone.replace('+', '') : '234' + regenResult.phone.slice(1)}?text=${encodeURIComponent(`Hello ${regenResult.full_name.split(' ')[0]}, your new FUTABallot voting token is: ${regenResult.token}\n\nMatric: ${regenResult.matric_number}\nVote at: https://seet-election.vercel.app/vote\n\nYour previous token is no longer valid.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg mt-2"
@@ -806,8 +814,7 @@ export default function AdminPage() {
           {voters.filter(v => !v.has_voted).map(voter => {
             const phone = voter.phone.startsWith('+') ? voter.phone.replace('+', '') : '234' + voter.phone.slice(1)
             const message = encodeURIComponent(
-              `Hello ${voter.full_name.split(' ')[0]}, your SEET Election voting token is: ${voter.token}\n\nMatric: ${voter.matric_number}\nVote at: seet-election.vercel.app/vote\n\nThis token is for one-time use only. Do not share it.`
-            )
+              `Hello ${voter.full_name.split(' ')[0]}, your FUTABallot voting token is: ${voter.token}\n\nMatric: ${voter.matric_number}\nVote at: https://futaballot.vercel.app/vote\n\nThis token is for one-time use only. Do not share it.`            )
             const waLink = `https://wa.me/${phone}?text=${message}`
             return (
               <tr key={voter.id}>
