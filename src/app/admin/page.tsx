@@ -481,8 +481,8 @@ export default function AdminPage() {
                   </button>
                 </div>
               </div>
+              </div>
             </div>
-          </div>
         <div className="card mt-6">
           <h3 className="font-bold text-dark mb-4">Snapshot History ({snapshots.length})</h3>
           {snapshots.length === 0 ? (
