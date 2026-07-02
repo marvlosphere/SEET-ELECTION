@@ -404,19 +404,26 @@ export default function AdminPage() {
                 </select>
               </div>
               <div className="relative border border-gray-300 rounded-lg overflow-hidden">
-                <div className="flex">
-                  <div className="bg-gray-50 text-gray-400 text-xs font-mono py-3 px-2 select-none text-right border-r border-gray-200"
-                    style={{ lineHeight: '1.5rem', minWidth: '2.5rem' }}>
+                <div className="flex h-48">
+                  <div
+                    id="csv-line-numbers"
+                    className="bg-gray-50 text-gray-400 text-xs font-mono py-3 px-2 select-none text-right border-r border-gray-200 overflow-y-hidden"
+                    style={{ lineHeight: '1.5rem', minWidth: '2.5rem' }}
+                  >
                     {(uploadCSV.split('\n').length > 0 ? uploadCSV.split('\n') : ['']).map((_, i) => (
                       <div key={i}>{i + 1}</div>
                     ))}
                   </div>
                   <textarea
-                    className="flex-1 h-32 font-mono text-sm p-3 outline-none resize-y"
+                    className="flex-1 font-mono text-sm p-3 outline-none resize-none overflow-y-auto"
                     style={{ lineHeight: '1.5rem' }}
                     placeholder={`matric_number,full_name,department,level,phone\nENG/2021/001,John Doe,Civil Engineering,400,08012345678`}
                     value={uploadCSV}
                     onChange={e => setUploadCSV(e.target.value)}
+                    onScroll={e => {
+                      const gutter = document.getElementById('csv-line-numbers')
+                      if (gutter) gutter.scrollTop = e.currentTarget.scrollTop
+                    }}
                   />
                 </div>
               </div>
